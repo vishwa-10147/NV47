@@ -11,6 +11,7 @@ from app.tools.file_tools import list_files, read_file
 from app.tools.process_tools import list_processes
 from app.tools.web_tools import search_and_learn
 from app.tools.perception_tools import get_active_window, list_visible_windows
+from app.core.agent import AutonomousAgent
 
 
 
@@ -265,6 +266,8 @@ class NV001Kernel:
             print("  read file README.md")
             print("  list processes")
             print("  search <query>")
+            print("  goal <text>")
+            print("  agent <goal>")
             print("  see windows")
             print("  see active window")
             print("  tools")
@@ -288,6 +291,11 @@ class NV001Kernel:
 
         elif command == "exit":
             self.stop()
+
+        elif command.startswith("agent "):
+            goal_text = command.removeprefix("agent ").strip()
+            agent = AutonomousAgent(self)
+            agent.run_autonomous_loop(goal_text)
 
         elif command.startswith("goal "):
             goal_text = command.removeprefix("goal ").strip()
