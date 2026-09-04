@@ -15,6 +15,8 @@ class PermissionManager:
         "read_file",
         "list_processes",
         "search_and_learn",
+        "get_active_window",
+        "list_visible_windows",
     }
 
     def check(self, action: str) -> PermissionResult:

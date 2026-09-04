@@ -10,6 +10,7 @@ from app.tools.open_application import open_application
 from app.tools.file_tools import list_files, read_file
 from app.tools.process_tools import list_processes
 from app.tools.web_tools import search_and_learn
+from app.tools.perception_tools import get_active_window, list_visible_windows
 
 
 
@@ -56,6 +57,16 @@ class NV001Kernel:
             name="search_and_learn",
             description="Searches the web for a given query and stores extracted knowledge",
             function=search_and_learn,
+        )
+        self.tools.register(
+            name="get_active_window",
+            description="Returns the title of the currently active window on the screen",
+            function=get_active_window,
+        )
+        self.tools.register(
+            name="list_visible_windows",
+            description="Returns a list of all visible window titles on the screen",
+            function=list_visible_windows,
         )
         
     def start(self) -> None:
@@ -254,6 +265,8 @@ class NV001Kernel:
             print("  read file README.md")
             print("  list processes")
             print("  search <query>")
+            print("  see windows")
+            print("  see active window")
             print("  tools")
             print("  tasks")
             print("  history")
@@ -278,7 +291,13 @@ class NV001Kernel:
 
         elif command.startswith("goal "):
             goal_text = command.removeprefix("goal ").strip()
-            tool_request = self.reasoning.process_goal(goal_text)
+            
+            # Phase 8: Self-Evolving Context Injection
+            recent_history = self.memory.get_recent_history(limit=10)
+            failed_tasks = [h['command'] for h in recent_history if h['status'] == 'failed']
+            context = f"Recent failed commands: {failed_tasks}" if failed_tasks else ""
+            
+            tool_request = self.reasoning.process_goal(goal_text, context=context)
             
             if tool_request:
                 print(f"Goal understood. Recommended action: {tool_request.action}")
@@ -287,6 +306,16 @@ class NV001Kernel:
                 self.execute_task(task)
             else:
                 print("Could not map goal to a known safe tool request.")
+
+        elif command == "see windows":
+            task = self.create_task(command)
+            task.command = "list_visible_windows"
+            self.execute_task(task)
+            
+        elif command == "see active window":
+            task = self.create_task(command)
+            task.command = "get_active_window"
+            self.execute_task(task)
 
         elif command:
             task = self.create_task(command)
@@ -391,6 +420,12 @@ class NV001Kernel:
                 "search_and_learn",
                 **kwargs,
             )
+
+        if action == "get_active_window":
+            return self.tools.execute("get_active_window")
+
+        if action == "list_visible_windows":
+            return self.tools.execute("list_visible_windows")
 
         return {
             "success": False,

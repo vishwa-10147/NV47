@@ -25,18 +25,33 @@ class DeterministicModel(ModelAdapter):
     def generate_tool_request(self, prompt: str, context: str) -> Optional[ToolRequest]:
         prompt_lower = prompt.lower()
         
-        if "system" in prompt_lower or "info" in prompt_lower:
-            return ToolRequest(action="system_info", arguments={})
+        # Self-Evolving Check: Read failures from context
+        failed_actions = []
+        if "Recent failed commands:" in context:
+            if "system_info" in context: failed_actions.append("system_info")
+            if "list_files" in context: failed_actions.append("list_files")
+            if "open_application" in context: failed_actions.append("open_application")
         
-        if "process" in prompt_lower:
-            return ToolRequest(action="list_processes", arguments={})
-            
-        if "file" in prompt_lower and "list" in prompt_lower:
-            return ToolRequest(action="list_files", arguments={})
-            
-        if "notepad" in prompt_lower or "calculator" in prompt_lower:
+        action = None
+        args = {}
+        
+        if "system" in prompt_lower or "info" in prompt_lower:
+            action = "system_info"
+        elif "process" in prompt_lower:
+            action = "list_processes"
+        elif "file" in prompt_lower and "list" in prompt_lower:
+            action = "list_files"
+        elif "notepad" in prompt_lower or "calculator" in prompt_lower:
             app = "notepad" if "notepad" in prompt_lower else "calculator"
-            return ToolRequest(action="open_application", arguments={"application": app})
+            action = "open_application"
+            args = {"application": app}
+        elif "see" in prompt_lower or "window" in prompt_lower:
+            action = "get_active_window"
+
+        if action:
+            if action in failed_actions:
+                print(f"\n[Self-Reflection] I remember '{action}' failed recently. As a self-evolving system, I should try an alternative strategy, but my rules are currently limited.")
+            return ToolRequest(action=action, arguments=args)
 
         return None
 
