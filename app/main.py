@@ -8,6 +8,11 @@ def main() -> None:
         from app.ui.desktop import start_gui
         start_gui()
         return
+        
+    if "--web" in sys.argv:
+        from app.ui.web_server import start_web_server
+        start_web_server()
+        return
 
     kernel = NV001Kernel()
     kernel.start()
@@ -15,7 +20,8 @@ def main() -> None:
     print()
     print("NV001 command interface")
     print("Type 'help' for commands.")
-    print("Run with '--gui' for the visual interface.")
+    print("Run with '--gui' for the Tkinter interface.")
+    print("Run with '--web' for the Advanced Modern Web Dashboard.")
     print()
 
     while kernel.running:
