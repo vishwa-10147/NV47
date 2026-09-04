@@ -2,8 +2,10 @@ from app.core.events import Event
 from app.core.logger import EventLogger
 from app.core.tasks import Task
 from app.core.tool_registry import ToolRegistry
-from app.tools.system_info import get_system_info
 from app.core.permissions import PermissionManager
+from app.core.reasoning import ReasoningEngine
+from app.memory.store import MemoryStore
+from app.tools.system_info import get_system_info
 from app.tools.open_application import open_application
 from app.tools.file_tools import list_files, read_file
 from app.tools.process_tools import list_processes
@@ -17,6 +19,8 @@ class NV001Kernel:
         self.tools = ToolRegistry()
         self.permissions = PermissionManager()
         self.logger = EventLogger()
+        self.reasoning = ReasoningEngine()
+        self.memory = MemoryStore()
 
         self.register_tools()
 
@@ -206,6 +210,13 @@ class NV001Kernel:
             print(f"Retrying task {task.task_id} ({task.retries + 1}/{task.max_retries})...")
             task.increment_retry()
             self.execute_task(task)
+        elif task.status in ("completed", "failed"):
+            self.memory.save_task_history(
+                task_id=task.task_id,
+                command=task.command,
+                status=task.status,
+                result=task.result
+            )
     
 
     def execute_command(self, command: str) -> None:
@@ -221,6 +232,7 @@ class NV001Kernel:
             print("  list processes")
             print("  tools")
             print("  tasks")
+            print("  history")
             print("  show logs")
             print("  help")
             print("  exit")
@@ -230,12 +242,27 @@ class NV001Kernel:
 
         elif command == "tasks":
             self.show_tasks()
+            
+        elif command == "history":
+            self.show_history()
 
         elif command in ("logs", "show logs"):
             self.show_logs()
 
         elif command == "exit":
             self.stop()
+
+        elif command.startswith("goal "):
+            goal_text = command.removeprefix("goal ").strip()
+            tool_request = self.reasoning.process_goal(goal_text)
+            
+            if tool_request:
+                print(f"Goal understood. Recommended action: {tool_request.action}")
+                task = self.create_task(command)
+                task.command = tool_request.action # override with structured action temporarily
+                self.execute_task(task)
+            else:
+                print("Could not map goal to a known safe tool request.")
 
         elif command:
             task = self.create_task(command)
@@ -268,6 +295,16 @@ class NV001Kernel:
         print("Recent logs:")
         for log in logs:
             print(log.strip())
+            
+    def show_history(self) -> None:
+        history = self.memory.get_recent_history()
+        if not history:
+            print("No task history found.")
+            return
+            
+        print("Recent Task History:")
+        for record in history:
+            print(f"[{record['timestamp']}] Task {record['task_id']} | {record['command']} | Status: {record['status']}")
     def run_tool(
         self,
         task: Task,
