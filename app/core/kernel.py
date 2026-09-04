@@ -1,10 +1,12 @@
-from app.core.events import Event, EventLogger
+from app.core.events import Event
+from app.core.logger import EventLogger
 from app.core.tasks import Task
 from app.core.tool_registry import ToolRegistry
 from app.tools.system_info import get_system_info
 from app.core.permissions import PermissionManager
 from app.tools.open_application import open_application
 from app.tools.file_tools import list_files, read_file
+from app.tools.process_tools import list_processes
 
 
 
@@ -39,6 +41,11 @@ class NV001Kernel:
             name="read_file",
             description="Reads a UTF-8 text file inside the NV001 project directory",
             function=read_file,
+        )
+        self.tools.register(
+            name="list_processes",
+            description="Lists currently running processes on the system",
+            function=list_processes,
         )
         
     def start(self) -> None:
@@ -86,6 +93,12 @@ class NV001Kernel:
 
         return task
     def execute_task(self, task: Task) -> None:
+        for dep_id in task.dependencies:
+            dep_task = next((t for t in self.tasks if t.task_id == dep_id), None)
+            if dep_task and dep_task.status != "completed":
+                print(f"Task {task.task_id} deferred: waiting on dependency {dep_id}")
+                return
+
         task.mark_running()
 
         self.emit_event(
@@ -129,6 +142,13 @@ class NV001Kernel:
                     task=task,
                     action=action,
                     relative_path=relative_path,
+                )
+
+            elif task.command == "list processes":
+                action = "list_processes"
+                result = self.run_tool(
+                    task=task,
+                    action=action,
                 )
 
             else:
@@ -181,6 +201,11 @@ class NV001Kernel:
             )
 
             print(f"Task failed: {error}")
+
+        if task.status == "failed" and task.can_retry():
+            print(f"Retrying task {task.task_id} ({task.retries + 1}/{task.max_retries})...")
+            task.increment_retry()
+            self.execute_task(task)
     
 
     def execute_command(self, command: str) -> None:
@@ -193,8 +218,10 @@ class NV001Kernel:
             print("  open calculator")
             print("  list files")
             print("  read file README.md")
+            print("  list processes")
             print("  tools")
             print("  tasks")
+            print("  show logs")
             print("  help")
             print("  exit")
 
@@ -203,6 +230,9 @@ class NV001Kernel:
 
         elif command == "tasks":
             self.show_tasks()
+
+        elif command in ("logs", "show logs"):
+            self.show_logs()
 
         elif command == "exit":
             self.stop()
@@ -228,6 +258,16 @@ class NV001Kernel:
                 f"{task.command} | "
                 f"{task.status}"
             )
+
+    def show_logs(self) -> None:
+        logs = self.logger.read_logs()
+        if not logs:
+            print("No logs found.")
+            return
+        
+        print("Recent logs:")
+        for log in logs:
+            print(log.strip())
     def run_tool(
         self,
         task: Task,
@@ -281,6 +321,9 @@ class NV001Kernel:
                 "read_file",
                 **kwargs,
             )
+
+        if action == "list_processes":
+            return self.tools.execute("list_processes")
 
         return {
             "success": False,
