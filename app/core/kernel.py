@@ -2,6 +2,9 @@ from app.core.events import Event
 from app.core.tasks import Task
 from app.core.tool_registry import ToolRegistry
 from app.tools.system_info import get_system_info
+from app.core.permissions import PermissionManager
+from app.tools.open_application import open_application
+
 
 
 class NV001Kernel:
@@ -9,6 +12,7 @@ class NV001Kernel:
         self.running = False
         self.tasks: list[Task] = []
         self.tools = ToolRegistry()
+        self.permissions = PermissionManager()
 
         self.register_tools()
 
@@ -17,6 +21,11 @@ class NV001Kernel:
             name="system_info",
             description="Collects information about the current computer",
             function=get_system_info,
+        )
+        self.tools.register(
+            name="open_application",
+            description="Opens an approved Windows application",
+            function=open_application,
         )
 
     def start(self) -> None:
@@ -62,7 +71,6 @@ class NV001Kernel:
         )
 
         return task
-
     def execute_task(self, task: Task) -> None:
         task.mark_running()
 
@@ -75,19 +83,21 @@ class NV001Kernel:
 
         try:
             if task.command == "system info":
-                result = self.tools.execute("system_info")
-                task.mark_completed(result)
-
-                self.emit_event(
-                    Event(
-                        event_type="TASK_COMPLETED",
-                        message=f"Task {task.task_id} completed",
-                        data=result,
-                    )
+                action = "system_info"
+                result = self.run_tool(
+                    task=task,
+                    action=action,
                 )
 
-                for key, value in result.items():
-                    print(f"{key}: {value}")
+            elif task.command.startswith("open "):
+                application = task.command.removeprefix("open ").strip()
+                action = "open_application"
+
+                result = self.run_tool(
+                    task=task,
+                    action=action,
+                    application=application,
+                )
 
             else:
                 task.mark_failed("Unknown command")
@@ -102,6 +112,30 @@ class NV001Kernel:
 
                 print("Unknown command.")
                 print("Type 'help' to see available commands.")
+                return
+
+            if result.get("success", True):
+                task.mark_completed(result)
+
+                self.emit_event(
+                    Event(
+                        event_type="TASK_COMPLETED",
+                        message=f"Task {task.task_id} completed",
+                        data=result,
+                    )
+                )
+            else:
+                task.mark_failed(result)
+
+                self.emit_event(
+                    Event(
+                        event_type="TASK_FAILED",
+                        message=f"Task {task.task_id} failed",
+                        data=result,
+                    )
+                )
+
+            print(result)
 
         except Exception as error:
             task.mark_failed(str(error))
@@ -115,6 +149,7 @@ class NV001Kernel:
             )
 
             print(f"Task failed: {error}")
+    
 
     def execute_command(self, command: str) -> None:
         command = command.strip().lower()
@@ -122,6 +157,8 @@ class NV001Kernel:
         if command == "help":
             print("Available commands:")
             print("  system info")
+            print("  open notepad")
+            print("  open calculator")
             print("  tools")
             print("  tasks")
             print("  help")
@@ -157,3 +194,52 @@ class NV001Kernel:
                 f"{task.command} | "
                 f"{task.status}"
             )
+    def run_tool(
+        self,
+        task: Task,
+        action: str,
+        **kwargs,
+    ) -> dict:
+        permission = self.permissions.check(action)
+
+        self.emit_event(
+            Event(
+                event_type="PERMISSION_CHECK",
+                message=permission.reason,
+                data={
+                    "action": action,
+                    "allowed": permission.allowed,
+                },
+            )
+        )
+
+        if not permission.allowed:
+            return {
+                "success": False,
+                "message": permission.reason,
+            }
+
+        self.emit_event(
+            Event(
+                event_type="TOOL_EXECUTION",
+                message=f"Executing tool: {action}",
+                data=kwargs,
+            )
+        )
+
+        if action == "system_info":
+            return {
+                "success": True,
+                "data": self.tools.execute("system_info"),
+            }
+
+        if action == "open_application":
+            return self.tools.execute(
+                "open_application",
+                **kwargs,
+            )
+
+        return {
+            "success": False,
+            "message": f"Unsupported action: {action}",
+        }
