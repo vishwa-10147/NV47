@@ -37,13 +37,31 @@ class KnowledgeEngine:
         self.store = KnowledgeStore()
         
     def search_web(self, query: str) -> List[Dict[str, str]]:
-        # Mock web search for Phase 6 foundation
-        return [
-            {
-                "url": f"https://example.com/search?q={query.replace(' ', '+')}", 
-                "snippet": f"Mock information stating facts about {query}."
-            }
-        ]
+        import urllib.request
+        import urllib.parse
+        import json
+        
+        url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(query)}&utf8=&format=json"
+        req = urllib.request.Request(url, headers={'User-Agent': 'NV001 Knowledge Engine'})
+        
+        try:
+            with urllib.request.urlopen(req, timeout=10) as response:
+                data = json.loads(response.read().decode())
+                results = []
+                # Get the top 3 results
+                for item in data.get("query", {}).get("search", [])[:3]:
+                    # Clean up basic HTML highlighting returned by Wikipedia
+                    snippet = item["snippet"].replace('<span class="searchmatch">', '').replace('</span>', '')
+                    snippet = snippet.replace('&quot;', '"').replace('&#039;', "'")
+                    
+                    results.append({
+                        "url": f"https://en.wikipedia.org/wiki/{urllib.parse.quote(item['title'].replace(' ', '_'))}", 
+                        "snippet": snippet.strip()
+                    })
+                return results
+        except Exception as e:
+            print(f"[KnowledgeEngine] Web search failed: {e}")
+            return []
         
     def acquire_knowledge(self, topic: str) -> dict:
         results = self.search_web(topic)
