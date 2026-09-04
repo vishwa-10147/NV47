@@ -190,6 +190,20 @@ class NV001Kernel:
                     query=query,
                 )
 
+            elif task.command == "get_active_window":
+                action = "get_active_window"
+                result = self.run_tool(
+                    task=task,
+                    action=action,
+                )
+
+            elif task.command == "list_visible_windows":
+                action = "list_visible_windows"
+                result = self.run_tool(
+                    task=task,
+                    action=action,
+                )
+
             else:
                 task.mark_failed("Unknown command")
 
