@@ -4,6 +4,7 @@ from app.core.tool_registry import ToolRegistry
 from app.tools.system_info import get_system_info
 from app.core.permissions import PermissionManager
 from app.tools.open_application import open_application
+from app.tools.file_tools import list_files, read_file
 
 
 
@@ -27,7 +28,18 @@ class NV001Kernel:
             description="Opens an approved Windows application",
             function=open_application,
         )
+        self.tools.register(
+            name="list_files",
+            description="Lists files inside the NV001 project directory",
+            function=list_files,
+        )
 
+        self.tools.register(
+            name="read_file",
+            description="Reads a UTF-8 text file inside the NV001 project directory",
+            function=read_file,
+        )
+        
     def start(self) -> None:
         self.running = True
 
@@ -99,6 +111,24 @@ class NV001Kernel:
                     application=application,
                 )
 
+            elif task.command == "list files":
+                action = "list_files"
+            
+                result = self.run_tool(
+                    task=task,
+                    action=action,
+                )
+            
+            elif task.command.startswith("read file "):
+                relative_path = task.command.removeprefix("read file ").strip()
+                action = "read_file"
+            
+                result = self.run_tool(
+                    task=task,
+                    action=action,
+                    relative_path=relative_path,
+                )
+
             else:
                 task.mark_failed("Unknown command")
 
@@ -159,6 +189,8 @@ class NV001Kernel:
             print("  system info")
             print("  open notepad")
             print("  open calculator")
+            print("  list files")
+            print("  read file README.md")
             print("  tools")
             print("  tasks")
             print("  help")
@@ -236,6 +268,15 @@ class NV001Kernel:
         if action == "open_application":
             return self.tools.execute(
                 "open_application",
+                **kwargs,
+            )
+
+        if action == "list_files":
+            return self.tools.execute("list_files")
+
+        if action == "read_file":
+            return self.tools.execute(
+                "read_file",
                 **kwargs,
             )
 

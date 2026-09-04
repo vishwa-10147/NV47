@@ -11,6 +11,8 @@ class PermissionManager:
     SAFE_ACTIONS = {
         "system_info",
         "open_application",
+        "list_files",
+        "read_file",
     }
 
     def check(self, action: str) -> PermissionResult:
