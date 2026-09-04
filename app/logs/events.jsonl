@@ -13,3 +13,10 @@
 {"event_type": "TASK_STARTED", "message": "Task 67fd941a started", "data": null, "timestamp": "2026-09-04T22:36:54"}
 {"event_type": "TASK_FAILED", "message": "Task 67fd941a failed", "data": "Unknown command", "timestamp": "2026-09-04T22:36:54"}
 {"event_type": "SYSTEM_STOPPED", "message": "NV001 kernel stopped", "data": null, "timestamp": "2026-09-04T22:37:07"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-04T22:42:46"}
+{"event_type": "TASK_CREATED", "message": "Task b088eb44 created", "data": {"task_id": "b088eb44", "command": "search what is quantum computing"}, "timestamp": "2026-09-04T22:43:13"}
+{"event_type": "TASK_STARTED", "message": "Task b088eb44 started", "data": null, "timestamp": "2026-09-04T22:43:13"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "search_and_learn", "allowed": true}, "timestamp": "2026-09-04T22:43:13"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: search_and_learn", "data": {"query": "what is quantum computing"}, "timestamp": "2026-09-04T22:43:13"}
+{"event_type": "TASK_COMPLETED", "message": "Task b088eb44 completed", "data": {"success": true, "message": "Acquired 1 facts about 'what is quantum computing'.", "data": {"topic": "what is quantum computing", "facts_extracted": 1}}, "timestamp": "2026-09-04T22:43:13"}
+{"event_type": "SYSTEM_STOPPED", "message": "NV001 kernel stopped", "data": null, "timestamp": "2026-09-04T22:48:40"}
