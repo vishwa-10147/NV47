@@ -1,4 +1,4 @@
-from app.core.events import Event
+from app.core.events import Event, EventLogger
 from app.core.tasks import Task
 from app.core.tool_registry import ToolRegistry
 from app.tools.system_info import get_system_info
@@ -14,6 +14,7 @@ class NV001Kernel:
         self.tasks: list[Task] = []
         self.tools = ToolRegistry()
         self.permissions = PermissionManager()
+        self.logger = EventLogger()
 
         self.register_tools()
 
@@ -66,6 +67,7 @@ class NV001Kernel:
             f"{event.event_type}: "
             f"{event.message}"
         )
+        self.logger.log(event)
 
     def create_task(self, command: str) -> Task:
         task = Task(command=command)
