@@ -58,5 +58,9 @@ class KnowledgeEngine:
         return {
             "success": True,
             "message": f"Acquired {facts_extracted} facts about '{topic}'.",
-            "data": {"topic": topic, "facts_extracted": facts_extracted}
+            "data": {
+                "topic": topic, 
+                "facts_extracted": facts_extracted,
+                "facts": results
+            }
         }
