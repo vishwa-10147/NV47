@@ -13,6 +13,7 @@ class PermissionManager:
         "open_application",
         "list_files",
         "read_file",
+        "list_processes",
     }
 
     def check(self, action: str) -> PermissionResult:

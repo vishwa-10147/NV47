@@ -113,15 +113,20 @@ class NV001Kernel:
         )
 
         try:
-            if task.command == "system info":
+            if task.command in ("system info", "system_info"):
                 action = "system_info"
                 result = self.run_tool(
                     task=task,
                     action=action,
                 )
 
-            elif task.command.startswith("open "):
-                application = task.command.removeprefix("open ").strip()
+            elif task.command.startswith("open ") or task.command == "open_application":
+                if task.command == "open_application":
+                    # For a real implementation, we'd pull arguments from the Task directly,
+                    # but for now we default to notepad if arguments are missing in this branch
+                    application = "notepad"
+                else:
+                    application = task.command.removeprefix("open ").strip()
                 action = "open_application"
 
                 result = self.run_tool(
@@ -130,7 +135,7 @@ class NV001Kernel:
                     application=application,
                 )
 
-            elif task.command == "list files":
+            elif task.command in ("list files", "list_files"):
                 action = "list_files"
             
                 result = self.run_tool(
@@ -138,8 +143,11 @@ class NV001Kernel:
                     action=action,
                 )
             
-            elif task.command.startswith("read file "):
-                relative_path = task.command.removeprefix("read file ").strip()
+            elif task.command.startswith("read file ") or task.command == "read_file":
+                if task.command == "read_file":
+                    relative_path = "README.md"
+                else:
+                    relative_path = task.command.removeprefix("read file ").strip()
                 action = "read_file"
             
                 result = self.run_tool(
@@ -148,7 +156,7 @@ class NV001Kernel:
                     relative_path=relative_path,
                 )
 
-            elif task.command == "list processes":
+            elif task.command in ("list processes", "list_processes"):
                 action = "list_processes"
                 result = self.run_tool(
                     task=task,
