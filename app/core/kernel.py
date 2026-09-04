@@ -284,6 +284,8 @@ class NV001Kernel:
             print("  agent <goal>")
             print("  see windows")
             print("  see active window")
+            print("  use ai")
+            print("  use rules")
             print("  tools")
             print("  tasks")
             print("  history")
@@ -305,6 +307,14 @@ class NV001Kernel:
 
         elif command == "exit":
             self.stop()
+            
+        elif command == "use ai":
+            self.reasoning.set_adapter("ollama")
+            print("Switched to Ollama AI model. (Ensure Ollama is running locally)")
+            
+        elif command == "use rules":
+            self.reasoning.set_adapter("deterministic")
+            print("Switched back to Deterministic Rules model.")
 
         elif command.startswith("agent "):
             goal_text = command.removeprefix("agent ").strip()

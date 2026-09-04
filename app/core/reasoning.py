@@ -56,10 +56,78 @@ class DeterministicModel(ModelAdapter):
         return None
 
 
+class OllamaAdapter(ModelAdapter):
+    """Integrates with a local Ollama instance for true offline LLM reasoning."""
+    def __init__(self, model_name: str = "llama3"):
+        self.model_name = model_name
+        self.api_url = "http://localhost:11434/api/generate"
+
+    def generate_response(self, prompt: str, context: str) -> str:
+        import urllib.request
+        import json
+        payload = {
+            "model": self.model_name,
+            "prompt": f"Context: {context}\n\nUser: {prompt}\nResponse:",
+            "stream": False
+        }
+        
+        req = urllib.request.Request(self.api_url, data=json.dumps(payload).encode('utf-8'), 
+                                     headers={'Content-Type': 'application/json'})
+        try:
+            with urllib.request.urlopen(req) as response:
+                result = json.loads(response.read().decode())
+                return result.get("response", "")
+        except Exception as e:
+            return f"[Ollama Error] Ensure Ollama is running locally. {e}"
+
+    def generate_tool_request(self, prompt: str, context: str) -> Optional[ToolRequest]:
+        import urllib.request
+        import json
+        
+        system_prompt = """You are NV001, an autonomous software intelligence.
+Your goal is to parse the user's intent and output a strict JSON object representing a ToolRequest.
+Available tools:
+- system_info: arguments: {}
+- list_processes: arguments: {}
+- list_files: arguments: {}
+- read_file: arguments: {"relative_path": "str"}
+- open_application: arguments: {"application": "str"}
+- search_and_learn: arguments: {"query": "str"}
+- get_active_window: arguments: {}
+- list_visible_windows: arguments: {}
+
+Output ONLY valid JSON like: {"action": "system_info", "arguments": {}}
+Do not wrap in markdown or add explanations.
+"""
+        payload = {
+            "model": self.model_name,
+            "system": system_prompt,
+            "prompt": f"Context/Failures: {context}\n\nUser: {prompt}",
+            "stream": False,
+            "format": "json"
+        }
+        
+        req = urllib.request.Request(self.api_url, data=json.dumps(payload).encode('utf-8'), 
+                                     headers={'Content-Type': 'application/json'})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as response:
+                result = json.loads(response.read().decode())
+                response_text = result.get("response", "").strip()
+                
+                parsed = json.loads(response_text)
+                if "action" in parsed:
+                    return ToolRequest(action=parsed["action"], arguments=parsed.get("arguments", {}))
+        except Exception as e:
+            print(f"[Ollama Error] Failed to generate valid tool request: {e}")
+            
+        return None
+
+
 class ReasoningEngine:
     def __init__(self) -> None:
         self.adapters: Dict[str, ModelAdapter] = {
-            "deterministic": DeterministicModel()
+            "deterministic": DeterministicModel(),
+            "ollama": OllamaAdapter(model_name="llama3")
         }
         self.active_adapter = "deterministic"
 
