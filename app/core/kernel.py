@@ -9,6 +9,7 @@ from app.tools.system_info import get_system_info
 from app.tools.open_application import open_application
 from app.tools.file_tools import list_files, read_file
 from app.tools.process_tools import list_processes
+from app.tools.web_tools import search_and_learn
 
 
 
@@ -50,6 +51,11 @@ class NV001Kernel:
             name="list_processes",
             description="Lists currently running processes on the system",
             function=list_processes,
+        )
+        self.tools.register(
+            name="search_and_learn",
+            description="Searches the web for a given query and stores extracted knowledge",
+            function=search_and_learn,
         )
         
     def start(self) -> None:
@@ -163,6 +169,15 @@ class NV001Kernel:
                     action=action,
                 )
 
+            elif task.command.startswith("search "):
+                query = task.command.removeprefix("search ").strip()
+                action = "search_and_learn"
+                result = self.run_tool(
+                    task=task,
+                    action=action,
+                    query=query,
+                )
+
             else:
                 task.mark_failed("Unknown command")
 
@@ -238,6 +253,7 @@ class NV001Kernel:
             print("  list files")
             print("  read file README.md")
             print("  list processes")
+            print("  search <query>")
             print("  tools")
             print("  tasks")
             print("  history")
@@ -369,6 +385,12 @@ class NV001Kernel:
 
         if action == "list_processes":
             return self.tools.execute("list_processes")
+
+        if action == "search_and_learn":
+            return self.tools.execute(
+                "search_and_learn",
+                **kwargs,
+            )
 
         return {
             "success": False,
