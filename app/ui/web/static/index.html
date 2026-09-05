@@ -2,131 +2,354 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NV001 Dashboard</title>
+    <title>NV001 Intelligence Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { 
-            background-color: #0f111a; 
-            color: #e0e0e0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            display: grid; 
-            grid-template-columns: 2fr 1fr; 
-            grid-template-rows: 1fr 1fr; 
-            height: 100vh; 
-            gap: 15px; 
-            padding: 15px; 
-            box-sizing: border-box; 
+        :root {
+            --bg-dark: #050b14;
+            --panel-bg: rgba(13, 22, 39, 0.8);
+            --accent-blue: #00d2ff;
+            --accent-glow: 0 0 10px rgba(0, 210, 255, 0.5);
+            --text-main: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border-color: #1e293b;
+            --success: #10b981;
         }
-        .panel { 
-            background-color: #1a1d27; 
-            border: 1px solid #2a2e3d; 
-            border-radius: 8px; 
-            padding: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at center, #0a1428 0%, #050b14 100%);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 220px 1fr 300px;
+            grid-template-rows: 80px 1fr 250px;
+            gap: 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
-        .panel h2 { 
-            margin-top: 0; 
-            font-size: 13px; 
-            color: #8f9bb3; 
-            text-transform: uppercase; 
-            border-bottom: 1px solid #2a2e3d; 
-            padding-bottom: 8px; 
-            letter-spacing: 1px;
+
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
-        #terminal { grid-row: 1 / 3; grid-column: 1 / 2; }
-        #tasks-panel { grid-row: 1 / 2; grid-column: 2 / 3; }
-        #memory-panel { grid-row: 2 / 3; grid-column: 2 / 3; }
-        
-        #output { 
-            flex-grow: 1; 
-            overflow-y: auto; 
-            font-family: 'Consolas', 'Courier New', monospace; 
-            font-size: 13px; 
-            color: #00ff9d; 
-            white-space: pre-wrap; 
-            margin-bottom: 15px; 
-            padding: 10px;
-            background: #151722;
-            border-radius: 6px;
-        }
-        #input-container { display: flex; gap: 10px; }
-        #cmd-input { 
-            flex-grow: 1; 
-            background: #222634; 
-            color: white; 
-            border: 1px solid #3b4252; 
-            padding: 12px; 
-            font-family: 'Consolas', monospace; 
-            border-radius: 6px; 
-            outline: none; 
-            transition: border-color 0.2s;
-        }
-        #cmd-input:focus { border-color: #00ff9d; }
-        button { 
-            background: #3b4252; 
-            color: white; 
-            border: none; 
-            padding: 12px 20px; 
-            cursor: pointer; 
-            border-radius: 6px; 
+
+        .panel-header {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
             font-weight: bold;
-            transition: background 0.2s;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        button:hover { background: #4c566a; }
+
+        /* Sidebar */
+        #sidebar {
+            grid-row: 1 / 4;
+            grid-column: 1 / 2;
+        }
+        .nav-item {
+            padding: 15px 20px;
+            color: var(--text-dim);
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--accent-blue);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        /* Top Bar */
+        #topbar {
+            grid-row: 1 / 2;
+            grid-column: 2 / 4;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 15px;
+        }
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 10px 20px;
+            transition: box-shadow 0.3s, border-color 0.3s;
+        }
+        .search-container:focus-within {
+            border-color: var(--accent-blue);
+            box-shadow: var(--accent-glow);
+        }
+        #cmd-input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            margin: 0 15px;
+        }
+        .mic-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .mic-btn.listening {
+            color: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Center Main (Chat / Orb) */
+        #main-center {
+            grid-row: 2 / 3;
+            grid-column: 2 / 3;
+            position: relative;
+        }
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .msg-user { color: var(--accent-blue); margin-bottom: 10px;}
+        .msg-nv001 { color: var(--success); margin-bottom: 20px;}
+        .msg-system { color: var(--text-dim); margin-bottom: 10px; font-size: 12px;}
+
+        /* Right Panel */
+        #right-sidebar {
+            grid-row: 2 / 3;
+            grid-column: 3 / 4;
+        }
         
-        .list-item { 
-            font-size: 12px; 
-            margin-bottom: 10px; 
-            padding: 10px; 
-            background: #222634; 
-            border-left: 4px solid #4c566a; 
-            border-radius: 4px;
+        /* Bottom Panels */
+        #bottom-tasks {
+            grid-row: 3 / 4;
+            grid-column: 2 / 3;
         }
-        .status-running { border-left-color: #ebcb8b; }
-        .status-completed { border-left-color: #a3be8c; }
-        .status-failed { border-left-color: #bf616a; }
-        .cmd-text { color: #d8dee9; font-weight: bold; margin-bottom: 4px; display: block;}
-        .meta-text { color: #8f9bb3; font-size: 10px;}
+        #bottom-timeline {
+            grid-row: 3 / 4;
+            grid-column: 3 / 4;
+        }
+
+        .list-container {
+            padding: 10px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 12px;
+            border-left: 2px solid var(--accent-blue);
+        }
+
+        /* Toggles */
+        .settings-toggles {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-dim);
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
-    <div id="terminal" class="panel">
-        <h2>Terminal / Command Interface</h2>
-        <div id="output"></div>
-        <div id="input-container">
-            <input type="text" id="cmd-input" placeholder="Enter command or goal..." autofocus>
-            <button onclick="sendCommand()">Execute</button>
+
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="panel">
+        <div style="padding: 20px; text-align: center; border-bottom: 1px solid var(--border-color);">
+            <h1 style="color: white; margin: 0; font-size: 24px; letter-spacing: 2px;">NV<span style="color: var(--accent-blue);">001</span></h1>
+            <div style="font-size: 10px; color: var(--text-dim); margin-top: 5px;">AUTONOMOUS INTELLIGENCE</div>
+        </div>
+        <div style="margin-top: 20px;">
+            <div class="nav-item active"><i class="fas fa-home"></i> &nbsp; Home</div>
+            <div class="nav-item"><i class="fas fa-tasks"></i> &nbsp; Tasks</div>
+            <div class="nav-item"><i class="fas fa-tools"></i> &nbsp; Tools</div>
+            <div class="nav-item"><i class="fas fa-database"></i> &nbsp; Memory</div>
+            <div class="nav-item"><i class="fas fa-eye"></i> &nbsp; Perception</div>
         </div>
     </div>
-    
-    <div id="tasks-panel" class="panel">
-        <h2>Active Task Queue (Live)</h2>
-        <div id="tasks-list" style="overflow-y: auto;">
-            <div style="color: #8f9bb3; font-size: 12px; font-style: italic;">No tasks running...</div>
+
+    <!-- TOP BAR -->
+    <div id="topbar" class="panel">
+        <div class="search-container">
+            <i class="fas fa-terminal" style="color: var(--accent-blue);"></i>
+            <input type="text" id="cmd-input" placeholder="Ask NV001 or give a command..." autofocus>
+            <button id="mic-btn" class="mic-btn" onclick="toggleMic()" title="Toggle Microphone">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+        <div class="settings-toggles">
+            <label style="cursor:pointer;">
+                <input type="checkbox" id="tts-toggle" checked> Auto-Speak Replies
+            </label>
         </div>
     </div>
-    
-    <div id="memory-panel" class="panel">
-        <h2>Procedural Memory (Recent History)</h2>
-        <div id="memory-list" style="overflow-y: auto;">
-            <div style="color: #8f9bb3; font-size: 12px; font-style: italic;">Memory empty...</div>
+
+    <!-- MAIN CENTER -->
+    <div id="main-center" class="panel">
+        <div class="panel-header"><i class="fas fa-comment-alt"></i> Communication Interface</div>
+        <div id="chat-log">
+            <div class="msg-system">NV001 Systems Initialized. Secure connection established.</div>
+            <div class="msg-nv001">Hello, I'm NV001. I am your autonomous software intelligence. How can I assist you today?</div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR (System / Active Window) -->
+    <div id="right-sidebar" class="panel">
+        <div class="panel-header"><i class="fas fa-desktop"></i> System Overview</div>
+        <div style="padding: 15px; color: var(--text-dim); font-size: 13px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>CPU Usage</span> <span style="color: white;">12%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>RAM Usage</span> <span style="color: white;">43%</span>
+            </div>
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 15px 0;">
+            <div style="color: white; margin-bottom: 5px;">Active Connections</div>
+            <div style="color: var(--success);"><i class="fas fa-circle" style="font-size:8px;"></i> Kernel Online</div>
+            <div style="color: var(--success);"><i class="fas fa-circle" style="font-size:8px;"></i> LLM Engine Connected</div>
+        </div>
+    </div>
+
+    <!-- BOTTOM TASKS -->
+    <div id="bottom-tasks" class="panel">
+        <div class="panel-header"><i class="fas fa-list-ul"></i> Recent Tasks</div>
+        <div id="tasks-list" class="list-container">
+            <!-- Populated via WebSocket -->
+        </div>
+    </div>
+
+    <!-- BOTTOM TIMELINE -->
+    <div id="bottom-timeline" class="panel">
+        <div class="panel-header"><i class="fas fa-history"></i> Event Timeline</div>
+        <div id="memory-list" class="list-container">
+            <!-- Populated via WebSocket -->
         </div>
     </div>
 
     <script>
         const ws = new WebSocket(`ws://${window.location.host}/ws`);
-        const output = document.getElementById("output");
+        const chatLog = document.getElementById("chat-log");
         const input = document.getElementById("cmd-input");
         const tasksList = document.getElementById("tasks-list");
         const memoryList = document.getElementById("memory-list");
+        const micBtn = document.getElementById("mic-btn");
+        const ttsToggle = document.getElementById("tts-toggle");
+
+        // Speech Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let isListening = false;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            
+            recognition.onstart = function() {
+                isListening = true;
+                micBtn.classList.add("listening");
+                input.placeholder = "Listening...";
+            };
+            
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                input.value = transcript;
+                sendCommand(); // Auto send on voice
+            };
+            
+            recognition.onerror = function(event) {
+                console.error("Speech error:", event.error);
+                stopMic();
+            };
+            
+            recognition.onend = function() {
+                stopMic();
+            };
+        }
+
+        function toggleMic() {
+            if (!recognition) {
+                alert("Speech recognition is not supported in this browser. Try Chrome or Edge.");
+                return;
+            }
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function stopMic() {
+            isListening = false;
+            micBtn.classList.remove("listening");
+            input.placeholder = "Ask NV001 or give a command...";
+        }
+
+        // Web Speech Synthesis (TTS)
+        function speakResponse(text) {
+            if (!ttsToggle.checked) return;
+            // Clean text for speech
+            const cleanText = text.replace(/\[.*?\]/g, '').replace(/USER >.*/g, '').trim();
+            if (!cleanText) return;
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.rate = 1.1;
+            utterance.pitch = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
 
         ws.onmessage = function(event) {
             const msg = JSON.parse(event.data);
             if (msg.type === "log") {
-                output.textContent += msg.content + "\n";
-                output.scrollTop = output.scrollHeight;
+                const content = msg.content;
+                let div = document.createElement("div");
+                
+                if (content.includes("USER >")) {
+                    div.className = "msg-user";
+                    div.innerHTML = `<i class="fas fa-user" style="font-size: 10px;"></i> <b>YOU:</b> ${content.replace('USER >', '')}`;
+                } else if (content.startsWith("[") || content.startsWith("Task ")) {
+                    div.className = "msg-system";
+                    div.textContent = content;
+                } else {
+                    div.className = "msg-nv001";
+                    div.innerHTML = `<i class="fas fa-robot" style="font-size: 10px;"></i> <b>NV001:</b> <br>${content}`;
+                    speakResponse(content); // Speak the robot's reply
+                }
+                
+                chatLog.appendChild(div);
+                chatLog.scrollTop = chatLog.scrollHeight;
             } else if (msg.type === "tasks_update") {
                 renderTasks(msg.content);
             } else if (msg.type === "memory_update") {
@@ -141,6 +364,10 @@
         function sendCommand() {
             const cmd = input.value;
             if (cmd.trim() === "") return;
+            
+            // Stop any ongoing speech when user issues new command
+            window.speechSynthesis.cancel();
+            
             ws.send(JSON.stringify({type: "command", content: cmd}));
             input.value = "";
         }
@@ -148,9 +375,9 @@
         function renderTasks(tasks) {
             if (tasks.length === 0) return;
             tasksList.innerHTML = tasks.reverse().map(t => 
-                `<div class="list-item status-${t.status}">
-                    <span class="cmd-text">${t.cmd}</span>
-                    <span class="meta-text">ID: ${t.id} | STATUS: ${t.status.toUpperCase()}</span>
+                `<div class="task-item">
+                    <span>${t.cmd}</span>
+                    <span style="color: var(--text-dim);">${t.status.toUpperCase()}</span>
                 </div>`
             ).join("");
         }
@@ -158,9 +385,9 @@
         function renderMemory(history) {
             if (history.length === 0) return;
             memoryList.innerHTML = history.reverse().map(h => 
-                `<div class="list-item status-${h.status}">
-                    <span class="cmd-text">${h.command}</span>
-                    <span class="meta-text">ID: ${h.task_id} | STATUS: ${h.status.toUpperCase()}</span>
+                `<div class="task-item">
+                    <span>${h.command}</span>
+                    <span style="color: var(--text-dim);">${h.status.toUpperCase()}</span>
                 </div>`
             ).join("");
         }
