@@ -32,24 +32,9 @@ ApplicationWindow {
             border.width: 1
             radius: Theme.radius
 
-            Column {
-                anchors.centerIn: parent
-                spacing: 20
-
-                Text {
-                    text: "Main Dashboard Area (Coming Soon)"
-                    color: Theme.accentPrimary
-                    font.pixelSize: 18
-                    font.bold: true
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-
-                Text {
-                    text: typeof backend !== "undefined" ? backend.get_system_status() : "Backend disconnected"
-                    color: Theme.success
-                    font.pixelSize: 14
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
+            Loader {
+                anchors.fill: parent
+                source: "pages/VoiceSettingsPage.qml"
             }
         }
     }

@@ -22,11 +22,21 @@ def start_gui():
     
     # Initialize Core System
     kernel = NV001Kernel()
+    
+    # Initialize Voice Manager
+    from app.voice.voice_manager import VoiceManager
+    voice_manager = VoiceManager()
+    voice_manager.start_worker()
+    
     kernel.start()
     
-    # Setup Controller
+    # Setup Controllers
+    from app.gui.backend.voice_service import VoiceService
     controller = GUIController(kernel)
+    voice_service = VoiceService(voice_manager)
+    
     engine.rootContext().setContextProperty("backend", controller)
+    engine.rootContext().setContextProperty("voiceBackend", voice_service)
     
     # Load QML
     qml_file = Path(__file__).parent / "qml" / "Main.qml"
@@ -37,6 +47,7 @@ def start_gui():
         
     ret = app.exec()
     kernel.stop()
+    voice_manager.stop_worker()
     sys.exit(ret)
 
 if __name__ == "__main__":
