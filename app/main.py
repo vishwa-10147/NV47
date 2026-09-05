@@ -5,7 +5,7 @@ def main() -> None:
     import sys
     
     if "--gui" in sys.argv:
-        from app.ui.desktop import start_gui
+        from app.gui.main import start_gui
         start_gui()
         return
         
@@ -20,7 +20,7 @@ def main() -> None:
     print()
     print("NV001 command interface")
     print("Type 'help' for commands.")
-    print("Run with '--gui' for the Tkinter interface.")
+    print("Run with '--gui' for the Desktop GUI (PySide6).")
     print("Run with '--web' for the Advanced Modern Web Dashboard.")
     print()
 

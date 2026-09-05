@@ -10,7 +10,7 @@ echo.
 echo Please select a startup mode:
 echo.
 echo [1] Web Dashboard (Advanced UI)
-echo [2] Desktop GUI (Tkinter)
+echo [2] Desktop GUI (Native PySide6 / QML)
 echo [3] Terminal (CLI Mode)
 echo [4] Exit
 echo.

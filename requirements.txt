@@ -10,3 +10,6 @@ Pillow
 
 # Semantic Memory
 chromadb
+
+# Native GUI
+PySide6
