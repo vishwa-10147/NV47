@@ -1,6 +1,5 @@
 import urllib.request
 import urllib.parse
-from bs4 import BeautifulSoup
 
 def scrape_website(url: str) -> dict:
     """Scrapes raw text from a given URL without needing a heavy browser binary."""
