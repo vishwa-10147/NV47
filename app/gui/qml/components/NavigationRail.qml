@@ -35,21 +35,21 @@ Rectangle {
                     color: Theme.textMain
                     font.pixelSize: 20
                     font.bold: true
-                    letterSpacing: 2
+                    font.letterSpacing: 2
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Text {
                     text: "AUTONOMOUS INTELLIGENCE"
                     color: Theme.textDim
                     font.pixelSize: 8
-                    letterSpacing: 1
+                    font.letterSpacing: 1
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Text {
                     text: "LOCAL • SECURE • EVOLVING"
                     color: Theme.accentPrimary
                     font.pixelSize: 8
-                    letterSpacing: 1
+                    font.letterSpacing: 1
                     anchors.horizontalCenter: parent.horizontalCenter
                     opacity: 0.8
                 }
