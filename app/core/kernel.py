@@ -14,7 +14,9 @@ from app.tools.web_tools import search_and_learn
 from app.tools.perception_tools import get_active_window, list_visible_windows
 from app.tools.vision_tools import take_screenshot, mouse_click, keyboard_type
 from app.tools.browser_tools import scrape_website
+from app.tools.voice_tools import speak_text
 from app.core.agent import AutonomousAgent
+from app.core.daemon import BackgroundDaemon
 
 
 
@@ -28,6 +30,7 @@ class NV001Kernel:
         self.reasoning = ReasoningEngine()
         self.memory = MemoryStore()
         self.semantic_memory = SemanticMemory()
+        self.daemon = BackgroundDaemon(self)
 
         self.register_tools()
 
@@ -83,6 +86,11 @@ class NV001Kernel:
             description="Scrapes text content from a given URL",
             function=scrape_website,
         )
+        self.tools.register(
+            name="speak_text",
+            description="Speaks text out loud using system voice",
+            function=speak_text,
+        )
         
     def start(self) -> None:
         self.running = True
@@ -96,7 +104,8 @@ class NV001Kernel:
 
     def stop(self) -> None:
         self.running = False
-
+        self.daemon.stop()
+        print(f"[Kernel] System stopped at {datetime.now().isoformat()}")
         self.emit_event(
             Event(
                 event_type="SYSTEM_STOPPED",
@@ -226,6 +235,11 @@ class NV001Kernel:
                 url = task.command.removeprefix("scrape ").strip()
                 action = "scrape_website"
                 result = self.run_tool(task=task, action=action, url=url)
+                
+            elif task.command.startswith("speak "):
+                text = task.command.removeprefix("speak ").strip()
+                action = "speak_text"
+                result = self.run_tool(task=task, action=action, text=text)
 
             else:
                 task.mark_failed("Unknown command")
@@ -378,6 +392,22 @@ class NV001Kernel:
             self.execute_task(task)
             
         elif command.startswith("scrape "):
+            task = self.create_task(command)
+            self.execute_task(task)
+            
+        elif command.startswith("schedule "):
+            parts = command.split(" ", 2)
+            if len(parts) >= 3:
+                try:
+                    interval = int(parts[1])
+                    cmd = parts[2]
+                    self.daemon.add_task(interval, cmd, f"Scheduled: {cmd}")
+                except ValueError:
+                    print("Invalid schedule command. Format: schedule <seconds> <command>")
+            else:
+                print("Invalid schedule command. Format: schedule <seconds> <command>")
+                
+        elif command.startswith("speak "):
             task = self.create_task(command)
             self.execute_task(task)
 

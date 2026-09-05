@@ -97,6 +97,7 @@ Available tools:
 - list_visible_windows: arguments: {}
 - take_screenshot: arguments: {}
 - scrape_website: arguments: {"url": "str"}
+- speak_text: arguments: {"text": "str"}
 
 Output ONLY valid JSON like: {"action": "system_info", "arguments": {}}
 Do not wrap in markdown or add explanations.
