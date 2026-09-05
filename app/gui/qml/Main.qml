@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
+import QtQuick.Layouts
+import "components"
 
 ApplicationWindow {
     id: root
@@ -8,34 +10,46 @@ ApplicationWindow {
     width: 1280
     height: 720
     title: "NV001 Intelligence"
-    color: "#050b14"
+    color: Theme.bgDark
 
-    Rectangle {
-        anchors.centerIn: parent
-        width: 400
-        height: 200
-        color: "#0d1627"
-        border.color: "#00d2ff"
-        border.width: 1
-        radius: 10
+    RowLayout {
+        anchors.fill: parent
+        anchors.margins: Theme.spacing
+        spacing: Theme.spacing
 
-        Column {
-            anchors.centerIn: parent
-            spacing: 20
+        // Left Navigation
+        NavigationRail {
+            Layout.fillHeight: true
+            Layout.preferredWidth: 220
+        }
 
-            Text {
-                text: "NV001 PySide6 GUI Initialized"
-                color: "#00d2ff"
-                font.pixelSize: 18
-                font.bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
+        // Center Content Placeholder
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            color: Theme.panelBg
+            border.color: Theme.border
+            border.width: 1
+            radius: Theme.radius
 
-            Text {
-                text: typeof backend !== "undefined" ? backend.get_system_status() : "Backend disconnected"
-                color: "#10b981"
-                font.pixelSize: 14
-                anchors.horizontalCenter: parent.horizontalCenter
+            Column {
+                anchors.centerIn: parent
+                spacing: 20
+
+                Text {
+                    text: "Main Dashboard Area (Coming Soon)"
+                    color: Theme.accentPrimary
+                    font.pixelSize: 18
+                    font.bold: true
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Text {
+                    text: typeof backend !== "undefined" ? backend.get_system_status() : "Backend disconnected"
+                    color: Theme.success
+                    font.pixelSize: 14
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
             }
         }
     }
