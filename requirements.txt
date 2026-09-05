@@ -1,0 +1,12 @@
+# Web Dashboard
+fastapi
+uvicorn
+websockets
+
+# Voice & Vision
+pyttsx3
+pyautogui
+Pillow
+
+# Semantic Memory
+chromadb
