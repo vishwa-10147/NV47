@@ -5,12 +5,15 @@ from app.core.tool_registry import ToolRegistry
 from app.core.permissions import PermissionManager
 from app.core.reasoning import ReasoningEngine
 from app.memory.store import MemoryStore
+from app.memory.semantic import SemanticMemory
 from app.tools.system_info import get_system_info
 from app.tools.open_application import open_application
 from app.tools.file_tools import list_files, read_file
 from app.tools.process_tools import list_processes
 from app.tools.web_tools import search_and_learn
 from app.tools.perception_tools import get_active_window, list_visible_windows
+from app.tools.vision_tools import take_screenshot, mouse_click, keyboard_type
+from app.tools.browser_tools import scrape_website
 from app.core.agent import AutonomousAgent
 
 
@@ -24,6 +27,7 @@ class NV001Kernel:
         self.logger = EventLogger()
         self.reasoning = ReasoningEngine()
         self.memory = MemoryStore()
+        self.semantic_memory = SemanticMemory()
 
         self.register_tools()
 
@@ -68,6 +72,16 @@ class NV001Kernel:
             name="list_visible_windows",
             description="Returns a list of all visible window titles on the screen",
             function=list_visible_windows,
+        )
+        self.tools.register(
+            name="take_screenshot",
+            description="Takes a screenshot of the main monitor and saves it",
+            function=take_screenshot,
+        )
+        self.tools.register(
+            name="scrape_website",
+            description="Scrapes text content from a given URL",
+            function=scrape_website,
         )
         
     def start(self) -> None:
@@ -203,6 +217,15 @@ class NV001Kernel:
                     task=task,
                     action=action,
                 )
+                
+            elif task.command == "take_screenshot":
+                action = "take_screenshot"
+                result = self.run_tool(task=task, action=action)
+                
+            elif task.command.startswith("scrape "):
+                url = task.command.removeprefix("scrape ").strip()
+                action = "scrape_website"
+                result = self.run_tool(task=task, action=action, url=url)
 
             else:
                 task.mark_failed("Unknown command")
@@ -347,6 +370,15 @@ class NV001Kernel:
         elif command == "see active window":
             task = self.create_task(command)
             task.command = "get_active_window"
+            self.execute_task(task)
+            
+        elif command == "screenshot":
+            task = self.create_task(command)
+            task.command = "take_screenshot"
+            self.execute_task(task)
+            
+        elif command.startswith("scrape "):
+            task = self.create_task(command)
             self.execute_task(task)
 
         elif command:

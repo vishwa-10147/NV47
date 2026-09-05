@@ -95,6 +95,8 @@ Available tools:
 - search_and_learn: arguments: {"query": "str"}
 - get_active_window: arguments: {}
 - list_visible_windows: arguments: {}
+- take_screenshot: arguments: {}
+- scrape_website: arguments: {"url": "str"}
 
 Output ONLY valid JSON like: {"action": "system_info", "arguments": {}}
 Do not wrap in markdown or add explanations.

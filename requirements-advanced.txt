@@ -1,0 +1,4 @@
+chromadb
+pyautogui
+Pillow
+playwright

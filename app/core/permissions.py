@@ -17,6 +17,8 @@ class PermissionManager:
         "search_and_learn",
         "get_active_window",
         "list_visible_windows",
+        "take_screenshot",
+        "scrape_website",
     }
 
     def check(self, action: str) -> PermissionResult:
