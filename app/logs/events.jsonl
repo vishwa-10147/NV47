@@ -66,3 +66,84 @@
 {"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "list_processes", "allowed": true}, "timestamp": "2026-09-05T12:46:18"}
 {"event_type": "TOOL_EXECUTION", "message": "Executing tool: list_processes", "data": {}, "timestamp": "2026-09-05T12:46:18"}
 {"event_type": "TASK_COMPLETED", "message": "Task ff0e2023 completed", "data": {"success": true, "processes": [{"name": "System Idle Process", "pid": "0", "session_name": "Services", "session_num": "0", "mem_usage": "8 K"}, {"name": "System", "pid": "4", "session_name": "Services", "session_num": "0", "mem_usage": "6,504 K"}, {"name": "Secure System", "pid": "428", "session_name": "Services", "session_num": "0", "mem_usage": "72,092 K"}, {"name": "Registry", "pid": "472", "session_name": "Services", "session_num": "0", "mem_usage": "30,656 K"}, {"name": "smss.exe", "pid": "1484", "session_name": "Services", "session_num": "0", "mem_usage": "344 K"}, {"name": "csrss.exe", "pid": "1508", "session_name": "Services", "session_num": "0", "mem_usage": "4,104 K"}, {"name": "wininit.exe", "pid": "2156", "session_name": "Services", "session_num": "0", "mem_usage": "4,280 K"}, {"name": "csrss.exe", "pid": "2176", "session_name": "Console", "session_num": "1", "mem_usage": "4,920 K"}, {"name": "services.exe", "pid": "2232", "session_name": "Services", "session_num": "0", "mem_usage": "12,360 K"}, {"name": "winlogon.exe", "pid": "2260", "session_name": "Console", "session_num": "1", "mem_usage": "7,712 K"}, {"name": "LsaIso.exe", "pid": "2292", "session_name": "Services", "session_num": "0", "mem_usage": "1,768 K"}, {"name": "lsass.exe", "pid": "2304", "session_name": "Services", "session_num": "0", "mem_usage": "19,932 K"}, {"name": "svchost.exe", "pid": "2448", "session_name": "Services", "session_num": "0", "mem_usage": "34,708 K"}, {"name": "fontdrvhost.exe", "pid": "2476", "session_name": "Services", "session_num": "0", "mem_usage": "996 K"}, {"name": "fontdrvhost.exe", "pid": "2484", "session_name": "Console", "session_num": "1", "mem_usage": "5,552 K"}, {"name": "svchost.exe", "pid": "2576", "session_name": "Services", "session_num": "0", "mem_usage": "17,816 K"}, {"name": "WUDFHost.exe", "pid": "2628", "session_name": "Services", "session_num": "0", "mem_usage": "3,640 K"}, {"name": "svchost.exe", "pid": "2656", "session_name": "Services", "session_num": "0", "mem_usage": "7,324 K"}, {"name": "dwm.exe", "pid": "2768", "session_name": "Console", "session_num": "1", "mem_usage": "1,49,844 K"}, {"name": "svchost.exe", "pid": "2852", "session_name": "Services", "session_num": "0", "mem_usage": "2,048 K"}], "total_count": 334}, "timestamp": "2026-09-05T12:46:19"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T12:54:53"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T12:55:17"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T12:55:20"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T12:55:27"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_CREATED", "message": "Task 54d2aedb created", "data": {"task_id": "54d2aedb", "command": "system info"}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_STARTED", "message": "Task 54d2aedb started", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_COMPLETED", "message": "Task 54d2aedb completed", "data": {"success": true, "data": {"operating_system": "Windows", "os_version": "10.0.26200", "machine": "AMD64", "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel", "python_version": "3.14.5 (tags/v3.14.5:5607950, May 10 2026, 10:43:50) [MSC v.1944 64 bit (AMD64)]"}}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "SYSTEM_STOPPED", "message": "NV001 kernel stopped", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "SYSTEM_STOPPED", "message": "NV001 kernel stopped", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_CREATED", "message": "Task 0bce0977 created", "data": {"task_id": "0bce0977", "command": "system info"}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_CREATED", "message": "Task 2d356910 created", "data": {"task_id": "2d356910", "command": "system info"}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_STARTED", "message": "Task 2d356910 started", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_COMPLETED", "message": "Task 2d356910 completed", "data": {"success": true, "data": {"operating_system": "Windows", "os_version": "10.0.26200", "machine": "AMD64", "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel", "python_version": "3.14.5 (tags/v3.14.5:5607950, May 10 2026, 10:43:50) [MSC v.1944 64 bit (AMD64)]"}}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_CREATED", "message": "Task aa8451d6 created", "data": {"task_id": "aa8451d6", "command": "system info"}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_CREATED", "message": "Task 5b4383f8 created", "data": {"task_id": "5b4383f8", "command": "system info"}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_STARTED", "message": "Task 5b4383f8 started", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_COMPLETED", "message": "Task 5b4383f8 completed", "data": {"success": true, "data": {"operating_system": "Windows", "os_version": "10.0.26200", "machine": "AMD64", "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel", "python_version": "3.14.5 (tags/v3.14.5:5607950, May 10 2026, 10:43:50) [MSC v.1944 64 bit (AMD64)]"}}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_CREATED", "message": "Task ac0c71fa created", "data": {"task_id": "ac0c71fa", "command": "invalid_command"}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_STARTED", "message": "Task ac0c71fa started", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_FAILED", "message": "Task ac0c71fa failed", "data": "Unknown command", "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_CREATED", "message": "Task 77602b57 created", "data": {"task_id": "77602b57", "command": "system info"}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_STARTED", "message": "Task 77602b57 started", "data": null, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "TASK_COMPLETED", "message": "Task 77602b57 completed", "data": {"success": true, "data": {"operating_system": "Windows", "os_version": "10.0.26200", "machine": "AMD64", "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel", "python_version": "3.14.5 (tags/v3.14.5:5607950, May 10 2026, 10:43:50) [MSC v.1944 64 bit (AMD64)]"}}, "timestamp": "2026-09-05T13:00:24"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_CREATED", "message": "Task c79a180d created", "data": {"task_id": "c79a180d", "command": "system info"}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_STARTED", "message": "Task c79a180d started", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "SYSTEM_STOPPED", "message": "NV001 kernel stopped", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_CREATED", "message": "Task d43d1e28 created", "data": {"task_id": "d43d1e28", "command": "system info"}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_CREATED", "message": "Task 92190ab6 created", "data": {"task_id": "92190ab6", "command": "system info"}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_STARTED", "message": "Task 92190ab6 started", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_CREATED", "message": "Task 3e05e47b created", "data": {"task_id": "3e05e47b", "command": "system info"}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_CREATED", "message": "Task 87fa2c82 created", "data": {"task_id": "87fa2c82", "command": "system info"}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_STARTED", "message": "Task 87fa2c82 started", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_CREATED", "message": "Task 3473095b created", "data": {"task_id": "3473095b", "command": "invalid_command"}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_STARTED", "message": "Task 3473095b started", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_CREATED", "message": "Task 2df732c4 created", "data": {"task_id": "2df732c4", "command": "system info"}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TASK_STARTED", "message": "Task 2df732c4 started", "data": null, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:05:28"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T13:11:06"}
+{"event_type": "TASK_CREATED", "message": "Task ee83311c created", "data": {"task_id": "ee83311c", "command": "system info"}, "timestamp": "2026-09-05T13:11:06"}
+{"event_type": "TASK_STARTED", "message": "Task ee83311c started", "data": null, "timestamp": "2026-09-05T13:11:06"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:11:06"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:11:06"}
+{"event_type": "SYSTEM_STOPPED", "message": "NV001 kernel stopped", "data": null, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "SYSTEM_STARTED", "message": "NV001 kernel started", "data": null, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "SYSTEM_STOPPED", "message": "NV001 kernel stopped", "data": null, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TASK_CREATED", "message": "Task e0b4617d created", "data": {"task_id": "e0b4617d", "command": "system info"}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TASK_CREATED", "message": "Task 3c5a8d34 created", "data": {"task_id": "3c5a8d34", "command": "system info"}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TASK_STARTED", "message": "Task 3c5a8d34 started", "data": null, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TASK_CREATED", "message": "Task 170fb256 created", "data": {"task_id": "170fb256", "command": "system info"}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TASK_CREATED", "message": "Task df6c8ef7 created", "data": {"task_id": "df6c8ef7", "command": "system info"}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TASK_STARTED", "message": "Task df6c8ef7 started", "data": null, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:12:10"}
+{"event_type": "TASK_CREATED", "message": "Task 26d214d6 created", "data": {"task_id": "26d214d6", "command": "invalid_command"}, "timestamp": "2026-09-05T13:12:11"}
+{"event_type": "TASK_STARTED", "message": "Task 26d214d6 started", "data": null, "timestamp": "2026-09-05T13:12:11"}
+{"event_type": "TASK_STARTED", "message": "Task 26d214d6 started", "data": null, "timestamp": "2026-09-05T13:12:11"}
+{"event_type": "TASK_CREATED", "message": "Task ee39e074 created", "data": {"task_id": "ee39e074", "command": "system info"}, "timestamp": "2026-09-05T13:12:11"}
+{"event_type": "TASK_STARTED", "message": "Task ee39e074 started", "data": null, "timestamp": "2026-09-05T13:12:11"}
+{"event_type": "PERMISSION_CHECK", "message": "Action is classified as safe", "data": {"action": "system_info", "allowed": true}, "timestamp": "2026-09-05T13:12:11"}
+{"event_type": "TOOL_EXECUTION", "message": "Executing tool: system_info", "data": {}, "timestamp": "2026-09-05T13:12:11"}

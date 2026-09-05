@@ -1,3 +1,4 @@
+from datetime import datetime
 from app.core.events import Event
 from app.core.logger import EventLogger
 from app.core.tasks import Task
@@ -243,54 +244,44 @@ class NV001Kernel:
 
             else:
                 task.mark_failed("Unknown command")
-
-                self.emit_event(
-                    Event(
-                        event_type="TASK_FAILED",
-                        message=f"Task {task.task_id} failed",
-                        data="Unknown command",
-                    )
-                )
-
                 print("Unknown command.")
                 print("Type 'help' to see available commands.")
-                return
-
-            if result.get("success", True):
-                task.mark_completed(result)
-
-                self.emit_event(
-                    Event(
-                        event_type="TASK_COMPLETED",
-                        message=f"Task {task.task_id} completed",
-                        data=result,
-                    )
+                result = {"success": False, "error": "Unknown command"}
+                
+        except Exception as e:
+            result = {"success": False, "error": str(e)}
+            
+        if result and result.get("success"):
+            task.mark_completed(result)
+            self.memory.save_task_history(task.task_id, task.command, task.status, result)
+            # Phase 13 Semantic Memory Integration
+            if hasattr(self, 'semantic_memory') and self.semantic_memory:
+                self.semantic_memory.store_memory(
+                    text=f"Task {task.command} resulted in: {str(result)[:500]}",
+                    metadata={"task_id": task.task_id, "command": task.command}
                 )
-            else:
-                task.mark_failed(result)
+        else:
+            task.mark_failed(result.get("error", "Unknown error") if result else "No result")
+            self.memory.save_task_history(task.task_id, task.command, task.status, result)
+            
+        # Handle retries if task failed
+        if task.status == "failed" and task.retries < task.max_retries:
+            task.retries += 1
+            print(f"[Kernel] Retrying task {task.task_id} (Attempt {task.retries}/{task.max_retries})")
+            task.status = "waiting"
+            # In a real async loop we'd re-queue, but here we just recurse for simplicity
+            self.execute_task(task)
+            return
 
-                self.emit_event(
-                    Event(
-                        event_type="TASK_FAILED",
-                        message=f"Task {task.task_id} failed",
-                        data=result,
-                    )
-                )
-
-            print(result)
-
-        except Exception as error:
-            task.mark_failed(str(error))
-
+        # Emit final events
+        if task.status == "failed":
             self.emit_event(
                 Event(
                     event_type="TASK_FAILED",
                     message=f"Task {task.task_id} failed",
-                    data=str(error),
+                    data={"task_id": task.task_id},
                 )
             )
-
-            print(f"Task failed: {error}")
 
         if task.status == "failed" and task.can_retry():
             print(f"Retrying task {task.task_id} ({task.retries + 1}/{task.max_retries})...")
